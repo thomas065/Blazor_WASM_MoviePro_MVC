@@ -1,0 +1,17 @@
+﻿.footerStyle {
+    background-color: var(--tb-theme-900);
+    color: var(--tb-light-color);
+}
+
+.footerStyle a {
+    color: var(--tb-light-200);
+}
+
+.footerStyle a:hover {
+    color: var(--tb-light-core);
+}
+
+.footerStyle .bi {
+    font-size: 1.5rem;
+    padding-inline-start: 0.5rem;
+}
