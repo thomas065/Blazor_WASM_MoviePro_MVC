@@ -1,4 +1,7 @@
 ﻿@page "/"
+@using MoviePro.Models
+@using MoviePro.Services
+@inject TMDBClient TMDB
 
 <PageTitle>Home</PageTitle>
 
@@ -6,6 +9,29 @@
 
 	<h1>Hello, world!</h1>
 	Welcome to your new app.
-	<img src="/images/popcornguy.svg" alt="Alternate Text" class="w-25" />
+	<img src="/images/THEMOVIEDBLogo.svg" alt="Alternate Text" class="w-25" />
 	<button class="btn btn-primary mt-3">Primary Button</button>
+
+	@if(movies != null)
+	{
+		<ul>
+			@foreach(var movie in movies.Results)
+			{
+				<li>@movie.Title</li>
+			}
+		</ul>
+	}
+	else
+	{
+		<p>Your movies are loading...</p>
+	}
 </div>
+
+@code {
+	private PopularMoviePagedResponse? movies;
+
+	protected override async Task OnInitializedAsync()
+	{
+		movies = await TMDB.GetPopularMoviesAsync();
+	}
+}
