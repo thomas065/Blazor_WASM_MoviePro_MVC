@@ -3,6 +3,7 @@
 @using MoviePro.Models
 @using MoviePro.Services
 @inject TMDBClient TMDB
+@inject NavigationManager Nav
 
 <PageTitle>Blazor MoviePro: Popular Movies</PageTitle>
 
@@ -37,13 +38,39 @@
 			}
 		</div>
 	</div>
+	@if (movies?.TotalPages > 1)
+	{
+		<div class="my-3">
+			<Paginator CurrentPage="movies.Page"
+					   TotalPages="movies.TotalPages > 500 ? 500: movies.TotalPages"
+					   OnPageChange="GetPage" />
+		</div>
+	}
 </div>
 
 @code {
 	private PopularMoviePagedResponse? movies;
 
-	protected override async Task OnInitializedAsync()
+	[SupplyParameterFromQuery]
+	public int Page { get; set; } = 1;
+
+	protected override async Task OnParametersSetAsync()
 	{
-		movies = await TMDB.GetPopularMoviesAsync();
+		if (Page < 1)
+		{
+			Page = 1;
+		}
+
+		if (Page > 500)
+		{
+			Page = 500;
+		}
+		movies = await TMDB.GetPopularMoviesAsync(Page);
+	}
+
+	private void GetPage(int pageNum)
+	{
+		string url = Nav.GetUriWithQueryParameter("page", pageNum);
+		Nav.NavigateTo(url);
 	}
 }
